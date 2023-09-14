@@ -1,0 +1,15 @@
+### Select field from Person, produces correct SQL:
+# SELECT "p"."Id" FROM "Persons" AS "p"
+GET https://localhost:7135/odata/Person?$select=id
+
+### Select field from Person and custom attribute, produces incorrect SQL (selects all fields from person):
+# SELECT "p"."Id", "p"."Name", "p0"."Id", "p0"."Key", "p0"."PersonId", "p0"."Value"
+# FROM "Persons" AS "p"
+# LEFT JOIN "PersonCustomAttribute" AS "p0" ON "p"."Id" = "p0"."PersonId"
+# ORDER BY "p"."Id"
+GET https://localhost:7135/odata/Person?$select=id,City
+
+### Filter on custom attribute, produces exception
+# System.ArgumentException: Method 'System.Object get_Item(System.String)' declared on 
+# type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]' cannot be called with instance of type 'System.Object'
+GET https://localhost:7135/odata/Person?$select=id,City&$filter=City eq 'Frankfurt'
